@@ -96,7 +96,8 @@ public class LFileParser {
 
     //初始化
     public void initAll(String filename) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+        InputStream inputstream= Main.class.getClassLoader().getResourceAsStream(filename);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream))) {
             readFromStream(reader);
         }
     }
