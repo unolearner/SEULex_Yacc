@@ -2,10 +2,9 @@ package SEU_Yacc;
 
 //import jdk.internal.icu.text.UnicodeSet;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import SEU_Lex.Main;
+
+import java.io.*;
 import java.util.*;
 
 public class YaccParser {
@@ -131,7 +130,8 @@ public class YaccParser {
     }
 
     public void readFromStream(String filename) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        InputStream inputstream= Main.class.getClassLoader().getResourceAsStream(filename);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream));
         String ln;
         int step = 0;
         while ((ln = reader.readLine()) != null) {
