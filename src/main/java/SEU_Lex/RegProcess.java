@@ -127,7 +127,7 @@ public class RegProcess {
                 st=ed=-1;
             }
             else{
-                if(c=='-'&&src.charAt(i-1)!='\\'){
+                if(c=='-'&&src.charAt(i-1)!='\\'&&(i+1<l&&src.charAt(i+1)!=']'&&src.charAt(i+1)>src.charAt(i-1))){
                     char pre=src.charAt(i-1);
                     ++i;
                     c=src.charAt(i);
@@ -212,5 +212,33 @@ public class RegProcess {
             }
         }
         return src_copy;
+    }
+
+    public static String setDots(String src){
+        /*
+        为简化后的正则表达式加.，.在Thompson算法中表示连接符，用于连接两个子表达式
+         */
+        StringBuilder res= new StringBuilder();
+        int l=src.length();
+        for(int i=0;i<l;i++){
+            char c=src.charAt(i);
+            res.append(c);
+            if(i==l-1)  continue;
+            if((c=='('||c=='|'||c=='\\')&&(i-1<0||src.charAt(i-1)!='\\'))  continue;
+            char pos=src.charAt(i+1);
+            if(pos=='|'||pos=='*'||pos==')')    continue;
+            res.append('.');
+        }
+        return res.toString();
+    }
+    public static String totalProcess(String src){
+        if(src.charAt(0)=='\"')   src=RegProcess.quoteErase(src);
+        src=RegProcess.turnToReal(src);
+        src=RegProcess.replaceBraces(src);
+        src=RegProcess.spChProcess(src);
+        src=RegProcess.turnBracketToOr(src);
+        //System.out.println(k);
+        src=RegProcess.setDots(src);
+        return src;
     }
 }

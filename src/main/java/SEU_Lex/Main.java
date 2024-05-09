@@ -22,12 +22,7 @@ public class Main {
         //System.out.println(yyl.regexRules.size());
         for(var ety:yyl.regexRules){
                 String k=ety.getKey();
-                if(k.charAt(0)=='\"')   k=RegProcess.quoteErase(k);
-                k=RegProcess.turnToReal(k);
-                k=RegProcess.replaceBraces(k);
-                k=RegProcess.spChProcess(k);
-                k=RegProcess.turnBracketToOr(k);
-                //System.out.println(k);
+                k=RegProcess.totalProcess(k);
                 int idx=yyl.regexRules.indexOf(ety);
                 yyl.regexRules.set(idx, new AbstractMap.SimpleEntry<>(k,ety.getValue()));
 
@@ -36,5 +31,8 @@ public class Main {
                 String test=ety.getKey();
                 System.out.println(test);
         }
+//        String t="\\|\\|";
+//        //System.out.println(t.substring(0,1));
+//        System.out.println(RegProcess.setDots(t));
     }
 }
