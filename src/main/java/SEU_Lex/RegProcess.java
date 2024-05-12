@@ -13,7 +13,7 @@ public class RegProcess {
      */
     public static Map<String,String> regs;
     public static int ch_st=9,ch_ed=126;
-    public static String op="(|)?*.-^+\\";
+    public static String op="(|)?*.-^+\\";//正则表达式中出现的运算符，{m,n}这种
     public static String epsilon="\u0000";
 
     public static String turnToReal(String src){
@@ -90,6 +90,7 @@ public class RegProcess {
         将中括号中的字符用|连接
         [xX]——>x|X
         [^]——>字符全集-^后面的
+        注意处理未转义的-
          */
         int l=src.length(),rev=0,st=-1,ed=-1;
         String tmp="",src_cp=src;
@@ -117,12 +118,21 @@ public class RegProcess {
                 String ori=src.substring(st,ed+1);
                 int lt=tmp.length();
                 String t=tmp;
+                StringBuilder res= new StringBuilder("");
                 for(int j=0;j<lt-1;j++){
                     char ch=tmp.charAt(j);
-                    t=t.replace(String.valueOf(ch),ch+"|");
+                    if(op.contains(String.valueOf(ch))) {
+                        //t=t.replace(String.valueOf(ch),"\\"+ch+"|");
+                        res.append("\\"+ch+'|');
+                    }
+                    else    res.append(ch+"|");
+                        //t=t.replace(String.valueOf(ch),ch+"|");
+                    //t=t.replace(String.valueOf(ch),ch+"|");
                 }
-                t=t.replace(String.valueOf(tmp.charAt(lt-1)),""+tmp.charAt(lt-1));
+                if(op.contains(String.valueOf(tmp.charAt(lt-1))) )  res.append("\\"+tmp.charAt(lt-1));
+                else res.append(tmp.charAt(lt-1)+"");
                 tmp="";
+                t=res.toString();
                 src_cp=src_cp.replace(ori,'('+t+')');
                 st=ed=-1;
             }
@@ -165,8 +175,9 @@ public class RegProcess {
         /*
         处理特殊字符：
         ?——>0个或一个前面的
-        +——>一个前面的，然后*
-        .——>字符全集,[\t-~]
+        +——>一个前面的，然后*，注意表达式中有[+-]，如何处理这里的+呢（即怎么区分运算符+和字符+）
+        .——>字符全集,[\t-~]，字符全集中遇到特殊字符也得加转义
+        littlec.l中似乎没有对单个字符的+，由此不考虑这种情况（因而将运算符+和字符+区分开来）
          */
         String src_copy=src;
         int l=src.length(),lPar=-1,rPar=-1;
@@ -183,16 +194,13 @@ public class RegProcess {
                         src_copy=src_copy.replace(String.valueOf(c)+'?',"("+epsilon+'|'+c+')');
                     }
                     break;
-//                case '+':
-//                    if(i-1>=0&&src.charAt(i-1)=='\\')   continue;
-//                    if(rPar==i-1){
-//                        String tmp=src.substring(lPar,rPar+1);
-//                        src_copy=src_copy.replace(tmp+'+',tmp+tmp+'*');
-//                    }else{
-//                        char c=src.charAt(i-1);
-//                        src_copy=src_copy.replace(String.valueOf(c)+'+',String.valueOf(c)+c+'*');
-//                    }
-//                    break;
+                case '+':
+                    if(i-1>=0&&src.charAt(i-1)=='\\')   continue;
+                    if(rPar==i-1){
+                        String tmp=src.substring(lPar,rPar+1);
+                        src_copy=src_copy.replace(tmp+'+',tmp+tmp+'*');
+                    }
+                    break;
                 case '.':
                     if(i-1>=0&&src.charAt(i-1)=='\\')   continue;
                     src_copy=src_copy.replace(String.valueOf('.'),"[\t-~]");
@@ -217,6 +225,10 @@ public class RegProcess {
     public static String setDots(String src){
         /*
         为简化后的正则表达式加.，.在Thompson算法中表示连接符，用于连接两个子表达式
+        不加点的情况：
+        - 正规表达式的最后一个字符
+        - 当前字符为非转义的（和|
+        - 当前字符的后一个字符为|、*、）
          */
         StringBuilder res= new StringBuilder();
         int l=src.length();
