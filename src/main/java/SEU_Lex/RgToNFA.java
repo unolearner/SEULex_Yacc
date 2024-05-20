@@ -1,22 +1,21 @@
 package SEU_Lex;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.*;
 
 public class RgToNFA {
-    class NFAState{
+    static class NFAState{
         int id;
         Map<Character, Set<Integer>> transitions;
         boolean isStart=false;
         boolean isEnd=false;
 
         public NFAState(){
+
             transitions=new HashMap<>();
         }
 
     }
-    class Rules{
+    static class Rules{
         String pattern;
         String  actions;
 
@@ -254,7 +253,7 @@ public class RgToNFA {
             String p=ety.getKey();
             int lp=p.length();
             boolean flag=false;
-            System.out.println("当前正规式为："+p);
+            //System.out.println("当前正规式为："+p);
 //            log.debug("当前正规式为："+p);
             for (int i=0;i<lp;i++){
                 char c=p.charAt(i);
@@ -383,8 +382,8 @@ public class RgToNFA {
                     break;
                 }
             }
-            System.out.println("对应的NFA如下：");
-            top.show();
+//            System.out.println("对应的NFA如下：");
+//            top.show();
             stk1.push(top);
             //j++;
         }
@@ -411,5 +410,6 @@ public class RgToNFA {
         }
         this.states.put(final_st.id,final_st);
     }
+
 
 }

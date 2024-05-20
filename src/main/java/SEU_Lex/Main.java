@@ -1,9 +1,7 @@
 package SEU_Lex;
 
 import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
         public static void main(String []args) throws IOException {
@@ -21,11 +19,6 @@ public class Main {
                 processed.put(p,v);
         }
         RegProcess.regs=processed;
-        //System.out.println(yyl.regexRules.size());
-//        String tmp=RegProcess.totalProcess("{D}*\\.{D}+{E}?{FS}?");
-//        for(int i=0;i<tmp.length();i++){
-//                System.out.println(tmp.charAt(i));
-//        }
         for(var ety:yyl.regexRules){
                 String k=ety.getKey();
                 //System.out.println(k);
@@ -34,15 +27,78 @@ public class Main {
                 yyl.regexRules.set(idx, new AbstractMap.SimpleEntry<>(k,ety.getValue()));
 
         }
-//        for(var ety:yyl.regexRules){
-//                String test=ety.getKey();
-//                System.out.println(test);
-//        }
         RgToNFA ctrl=new RgToNFA();
         ctrl.regRules=yyl.regexRules;
-        //System.out.println("后缀：");
         ctrl.turnToSufffix();
         ctrl.NFABuilder();
-        //System.out.println(RgToNFA.test(RegProcess.totalProcess("{L}?'((\\\\.)|[^\\\\'\\n])+'")));
+        //ctrl.show();
+        DFABuilder builder=new DFABuilder(ctrl);
+        builder.final_dfa.show();
+
+//        RgToNFA test=new RgToNFA();
+//        test.st=7;
+//        RgToNFA.NFAState []states=new RgToNFA.NFAState[9];
+//        for (int i = 0; i < states.length; i++) {
+//                states[i] = new RgToNFA.NFAState();
+//        }
+//        states[1].id=1;
+//        states[1].isStart=false;
+//        states[1].isEnd=false;
+//        states[1].transitions.put('a',new HashSet<>());
+//        states[1].transitions.get('a').add(3);
+//        states[1].transitions.put('b',new HashSet<>());
+//        states[1].transitions.get('b').add(4);
+//        states[2].id=2;
+//        states[2].isStart=false;
+//        states[2].isEnd=false;
+//        states[2].transitions.put('\u0000',new HashSet<>());
+//        states[2].transitions.get('\u0000').add(6);
+//        states[3].id=3;
+//        states[3].isStart=false;
+//        states[3].isEnd=false;
+//        states[3].transitions.put('a',new HashSet<>());
+//        states[3].transitions.get('a').add(2);
+//        states[4].id=4;
+//        states[4].isStart=false;
+//        states[4].isEnd=false;
+//        states[4].transitions.put('b',new HashSet<>());
+//        states[4].transitions.get('b').add(2);
+//        states[5].id=5;
+//        states[5].isStart=false;
+//        states[5].isEnd=false;
+//        states[5].transitions.put('a',new HashSet<>());
+//        states[5].transitions.get('a').add(5);
+//        states[5].transitions.put('b',new HashSet<>());
+//        states[5].transitions.get('b').add(5);
+//        states[5].transitions.put('\u0000',new HashSet<>());
+//        states[5].transitions.get('\u0000').add(1);
+//        states[6].id=6;
+//        states[6].isStart=false;
+//        states[6].isEnd=false;
+//        states[6].transitions.put('a',new HashSet<>());
+//        states[6].transitions.get('a').add(6);
+//        states[6].transitions.put('b',new HashSet<>());
+//        states[6].transitions.get('b').add(6);
+//        states[6].transitions.put('\u0000',new HashSet<>());
+//        states[6].transitions.get('\u0000').add(8);
+//        states[7].id=7;
+//        states[7].isStart=true;
+//        states[7].isEnd=false;
+//        states[7].transitions.put('\u0000',new HashSet<>());
+//        states[7].transitions.get('\u0000').add(5);
+//        states[8].id=8;
+//        states[8].isStart=false;
+//        states[8].isEnd=true;
+//        test.states.put(8,states[8]);
+//        test.endStates.put(8,new RgToNFA.Rules("test","test"));
+//        test.states.put(1,states[1]);
+//        test.states.put(2,states[2]);
+//        test.states.put(3,states[3]);
+//        test.states.put(4,states[4]);
+//        test.states.put(5,states[5]);
+//        test.states.put(6,states[6]);
+//        test.states.put(7,states[7]);
+//        DFABuilder builder=new DFABuilder(test);
+//        builder.final_dfa.show();
     }
 }
