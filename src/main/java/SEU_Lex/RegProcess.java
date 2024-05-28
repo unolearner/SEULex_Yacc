@@ -118,7 +118,8 @@ public class RegProcess {
                     String s="";
                     for(int j=ch_st;j<=ch_ed;j++){
                         char ch=(char)j;
-                        if(!tmp.contains(String.valueOf(ch))) s+=ch;
+                        if(!tmp.contains(String.valueOf(ch)))
+                            s+=ch;
                     }
                     tmp=s;
                 }
@@ -225,7 +226,7 @@ public class RegProcess {
 //                        else    res.replace(i-1,i,"("+epsilon+'|'+c+')');
                         int tmp=0;
                         for(int j=0;j<i;j++)    tmp+=offset[j];
-                        res.replace(i-1+tmp,i+tmp,"("+epsilon+'|'+c+')');
+                        res.replace(i-1+tmp,i+tmp+1,"("+epsilon+'|'+c+')');
                         offset[i]=3;
                         pos=i;
                     }
@@ -288,17 +289,29 @@ public class RegProcess {
         - 正规表达式的最后一个字符
         - 当前字符为非转义的（和|
         - 当前字符的后一个字符为|、*、）
+        注意有多个转义符的情况，还是得用flag！！不能只看前面一个是否为转义！！！
          */
         StringBuilder res= new StringBuilder();
         int l=src.length();
+        boolean flag=false;
         for(int i=0;i<l;i++){
             char c=src.charAt(i);
             res.append(c);
+            if(c=='\\'&&!flag){
+                flag=true;
+                continue;
+            }
             if(i==l-1)  continue;
-            if((c=='('||c=='|'||c=='\\')&&(i-1<0||src.charAt(i-1)!='\\'))  continue;
+//            if((c=='('||c=='|'||c=='\\')&&(i-1<0||src.charAt(i-1)!='\\'))  continue;
+            if((c=='('||c=='|')&&!flag)  continue;
             char pos=src.charAt(i+1);
-            if(pos=='|'||pos=='*'||pos==')')    continue;
+            if(pos=='|'||pos=='*'||pos==')')    {
+                //为避免因为后面的字符是这几个特殊字符continue了而没有重置flag，此处判断是否需要重置
+                if(flag)    flag=false;//针对当前字符为被转义的字符（此时flag为True）且后面一个字符为|、*、)的情况
+                continue;
+            }
             res.append('.');
+            if(flag)    flag=false;
         }
         return res.toString();
     }

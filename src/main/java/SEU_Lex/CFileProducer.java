@@ -218,7 +218,7 @@ public class CFileProducer {
             if(!case_list.containsKey(tmp))  case_list.put(tmp,new HashSet<>());
             case_list.get(tmp).add(st.id);
         }
-        DFAPush+=SwitchCaseProducer.switchBuilder("DFAState",case_list,"return 0; ")+"return 1;\n}";
+        DFAPush+=SwitchCaseProducer.switchBuilder("DFAState",case_list,"return 0; ")+"return 0;\n}";
 
         return DFAExec+'\n'+ DFATry +'\n'+DFAPush;
     }

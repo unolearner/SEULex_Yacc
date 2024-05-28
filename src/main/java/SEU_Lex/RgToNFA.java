@@ -55,7 +55,7 @@ public class RgToNFA {
             boolean flag=false;//标记前面一个是不是斜杠
             for(int i=0;i<l;i++){
                 char c=k.charAt(i);
-                if(c=='\\'){
+                if(c=='\\'&&!flag){
                     flag=true;
                     res.append(c);
                     continue;
@@ -258,7 +258,7 @@ public class RgToNFA {
             for (int i=0;i<lp;i++){
                 char c=p.charAt(i);
                 //System.out.println("当前字符为："+c);
-                if(c=='\\') {
+                if(c=='\\'&&!flag) {
                     flag=true;
                     continue;
                 }

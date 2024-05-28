@@ -89,7 +89,6 @@ public class Main {
         RegProcess.regs=processed;
         for(var ety:yyl.regexRules){
                 String k=ety.getKey();
-                //System.out.println(k);
                 k=RegProcess.totalProcess(k);
                 int idx=yyl.regexRules.indexOf(ety);
                 yyl.regexRules.set(idx, new AbstractMap.SimpleEntry<>(k,ety.getValue()));
@@ -101,13 +100,17 @@ public class Main {
         ctrl.NFABuilder();
         //ctrl.show();
         DFABuilder builder=new DFABuilder(ctrl);
-        builder.final_dfa.show();
-        //System.out.println(builder.final_dfa.states.size());
-
+//        //builder.final_dfa.show();
+//
         CFileProducer generator=new CFileProducer();
         generator.DFAProgram=generator.getDFAProgram(builder.final_dfa);
         generator.program1= yyl.program1;
         generator.program2=yyl.program2;
         generator.yieldLex();
+
+//        for(var ety:builder.final_dfa.endStates.entrySet()){
+//                RgToNFA.Rules tmp=ety.getValue();
+//                System.out.println(tmp.actions);
+//        }
     }
 }
