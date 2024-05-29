@@ -30,19 +30,46 @@ public class DFABuilder {
             /*
             此函数用于展示对应的dfa
              */
-            for(int i=0;i<cnt;i++){
-                DFAState state=states.get(i);
-                System.out.println("当前状态为"+state.id+":");
-                System.out.println("该状态由NFA的这些状态组成：");
-                System.out.println(state.identitySet);
-                for(var c:state.transitions.keySet()){
-                    int next=state.transitions.get(c);
-                    System.out.println("输入"+c+"后，转到状态"+next);
-                }
-                if(state.isEnd){
-                    System.out.println("当前状态为终态，语义动作为："+endStates.get(state.id).actions);
+//            for(int i=0;i<cnt;i++){
+//                DFAState state=states.get(i);
+//                System.out.println("当前状态为"+state.id+":");
+//                System.out.println("该状态由NFA的这些状态组成：");
+//                System.out.println(state.identitySet);
+//                for(var c:state.transitions.keySet()){
+//                    int next=state.transitions.get(c);
+//                    System.out.println("输入"+c+"后，转到状态"+next);
+//                }
+//                if(state.isEnd){
+//                    System.out.println("当前状态为终态，语义动作为："+endStates.get(state.id).actions);
+//                }
+//            }
+            // Generate Graphviz code
+            StringBuilder graphviz = new StringBuilder();
+            graphviz.append("digraph DFA {\n");
+            graphviz.append("rankdir=TB;\n");  // Top to Bottom layout
+
+            // Add nodes
+            for (DFAState state : this.states) {
+                if (state.isEnd) {
+                    graphviz.append(String.format("  %d [label=\"%d\", shape=doublecircle, color=red];\n", state.id, state.id));
+                } else {
+                    graphviz.append(String.format("  %d [label=\"%d\", shape=circle, color=blue];\n", state.id, state.id));
                 }
             }
+
+            // Add edges
+            for (DFAState state : this.states) {
+                for (Map.Entry<Character, Integer> entry : state.transitions.entrySet()) {
+                    char c = entry.getKey();
+                    int targetState = entry.getValue();
+                    graphviz.append(String.format("  %d -> %d [label=\"%s\"];\n", state.id, targetState, c));
+                }
+            }
+
+            graphviz.append("}\n");
+
+            // Output the Graphviz code
+            System.out.println(graphviz.toString());
         }
 
     }

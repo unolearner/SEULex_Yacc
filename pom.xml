@@ -20,12 +20,12 @@
             <version>RELEASE</version>
             <scope>provided</scope>
         </dependency>
-        <!--状态循环图绘制工具-->
         <dependency>
             <groupId>guru.nidi</groupId>
             <artifactId>graphviz-java</artifactId>
-            <version>0.16.0</version>
+            <version>0.18.1</version>
         </dependency>
+
 
     </dependencies>
 

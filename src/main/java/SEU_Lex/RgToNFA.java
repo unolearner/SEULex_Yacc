@@ -1,6 +1,21 @@
 package SEU_Lex;
 
+import guru.nidi.graphviz.attribute.Label;
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.GraphvizJdkEngine;
+import guru.nidi.graphviz.engine.GraphvizV8Engine;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.model.MutableNode;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
+
+import static guru.nidi.graphviz.model.Factory.mutGraph;
+import static guru.nidi.graphviz.model.Factory.mutNode;
+import static guru.nidi.graphviz.model.Link.to;
 
 public class RgToNFA {
     static class NFAState{
@@ -223,26 +238,57 @@ public class RgToNFA {
     }
 
 
-    public  void show(){
+    public  void show() throws IOException {
         /*
         此函数用于展示NFA
          */
-        System.out.println("初态为："+ st);
-        for(var k:this.states.keySet()){
-            NFAState cur=this.states.get(k);
-            System.out.println("当前状态为"+cur.id+":");
-            for(var c:cur.transitions.keySet()){
-                var stSet=cur.transitions.get(c);
-                System.out.println("输入"+c+"后，转换到状态：");
-                System.out.println(stSet);
-            }
-            if(cur.isEnd){
-                System.out.println("当前状态为终态，对应的语义动作为："+this.endStates.get(cur.id).actions);
+//        System.out.println("初态为："+ st);
+//        for(var k:this.states.keySet()){
+//            NFAState cur=this.states.get(k);
+//            System.out.println("当前状态为"+cur.id+":");
+//            for(var c:cur.transitions.keySet()){
+//                var stSet=cur.transitions.get(c);
+//                System.out.println("输入"+c+"后，转换到状态：");
+//                System.out.println(stSet);
+//            }
+//            if(cur.isEnd){
+//                System.out.println("当前状态为终态，对应的语义动作为："+this.endStates.get(cur.id).actions);
+//            }
+//        }
+        // Generate Graphviz code
+        StringBuilder graphviz = new StringBuilder();
+        graphviz.append("digraph NFA {\n");
+        graphviz.append("rankdir=TB;\n");  // Left to Right layout
+
+        // Add nodes
+        for (NFAState state : states.values()) {
+            if (state.isStart) {
+                graphviz.append(String.format("  %d [label=\"Start %d\", shape=circle, color=green];\n", state.id, state.id));
+            } else if (state.isEnd) {
+                graphviz.append(String.format("  %d [label=\"End %d\", shape=doublecircle, color=red];\n", state.id, state.id));
+            } else {
+                graphviz.append(String.format("  %d [label=\"%d\", shape=circle, color=blue];\n", state.id, state.id));
             }
         }
+
+        // Add edges
+        for (NFAState state : states.values()) {
+            for (Map.Entry<Character, Set<Integer>> entry : state.transitions.entrySet()) {
+                char c = entry.getKey();
+                String label = (c == '\u0000') ? "ε" : Character.toString(c);
+                for (int targetState : entry.getValue()) {
+                    graphviz.append(String.format("  %d -> %d [label=\"%s\"];\n", state.id, targetState, label));
+                }
+            }
+        }
+
+        graphviz.append("}\n");
+
+        // Output the Graphviz code
+        System.out.println(graphviz.toString());
     }
 
-    public void NFABuilder(){
+    public void NFABuilder() throws IOException {
         /*
         利用Thompson算法，扫描后缀表达式，构建NFA
          */
@@ -409,6 +455,7 @@ public class RgToNFA {
             }
         }
         this.states.put(final_st.id,final_st);
+        //this.show();
     }
 
 

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
-        public void testDFAbuilder(){
+        public static void testDFAbuilder() throws IOException {
                 RgToNFA test=new RgToNFA();
                 test.st=7;
                 RgToNFA.NFAState []states=new RgToNFA.NFAState[9];
@@ -68,6 +68,7 @@ public class Main {
                 test.states.put(5,states[5]);
                 test.states.put(6,states[6]);
                 test.states.put(7,states[7]);
+                test.show();
                 DFABuilder builder=new DFABuilder(test);
                 builder.final_dfa.show();
         }
@@ -100,7 +101,7 @@ public class Main {
         ctrl.NFABuilder();
         //ctrl.show();
         DFABuilder builder=new DFABuilder(ctrl);
-//        //builder.final_dfa.show();
+        //builder.final_dfa.show();
 //
         CFileProducer generator=new CFileProducer();
         generator.DFAProgram=generator.getDFAProgram(builder.final_dfa);
@@ -108,9 +109,6 @@ public class Main {
         generator.program2=yyl.program2;
         generator.yieldLex();
 
-//        for(var ety:builder.final_dfa.endStates.entrySet()){
-//                RgToNFA.Rules tmp=ety.getValue();
-//                System.out.println(tmp.actions);
-//        }
+        //testDFAbuilder();
     }
 }
