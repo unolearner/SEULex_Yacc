@@ -122,8 +122,8 @@ public class CFileProducer {
             "\tyyin = stdin;\n" +
             "\tyyout = stdout;\n" +
             "\n" +
-            "\tchar inputFilename[] = \"test.c\";\n" +
-            "\tchar outputFilename[] = \"test.lo\";\n" +
+            "\tchar inputFilename[256] = \"test.c\";\n" +
+            "\tchar outputFilename[256] = \"test.lo\";\n" +
             "\n" +
             "\tif (argc == 3) {\n" +
             "\t\tstrcpy(inputFilename, argv[1]);\n" +

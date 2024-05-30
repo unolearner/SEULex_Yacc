@@ -75,23 +75,6 @@ public class Main {
                 builder.final_dfa.show();
         }
 
-        private static void executeCommand(String command) throws IOException, InterruptedException {
-                ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
-                processBuilder.redirectErrorStream(true);
-                Process process = processBuilder.start();
-
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                                System.out.println(line);
-                        }
-                }
-
-                int exitCode = process.waitFor();
-                if (exitCode != 0) {
-                        throw new RuntimeException("Command failed with exit code " + exitCode);
-                }
-        }
 
         public static void main(String []args) throws IOException, InterruptedException {
         LFileParser yyl = new LFileParser();
@@ -130,10 +113,5 @@ public class Main {
         generator.yieldLex();
 
         //testDFAbuilder();
-        String compileCmd="gcc -o result/lex.yy.exe result/lex.yy.c -std=c11";
-        executeCommand(compileCmd);
-
-        String runCmd="./result/lex.yy.exe result/test.c result/test.io";
-        executeCommand(runCmd);
     }
 }

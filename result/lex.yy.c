@@ -11140,8 +11140,8 @@ int main(int argc, char * argv[]) {
 	yyin = stdin;
 	yyout = stdout;
 
-	char inputFilename[] = "test.c";
-	char outputFilename[] = "test.lo";
+	char inputFilename[256] = "test.c";
+	char outputFilename[256] = "test.lo";
 
 	if (argc == 3) {
 		strcpy(inputFilename, argv[1]);
